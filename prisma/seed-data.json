@@ -1,0 +1,208 @@
+{
+  "categories": [
+    { "name": "Entertainment", "slug": "entertainment", "description": "Showbiz, interviews, lifestyle and culture.", "color": "#e11d48" },
+    { "name": "Sports", "slug": "sports", "description": "Results, analysis and human stories from sport.", "color": "#0284c7" },
+    { "name": "Politics", "slug": "politics", "description": "The decisions, debates and people shaping the nation.", "color": "#1d4ed8" },
+    { "name": "Business", "slug": "business", "description": "Markets, entrepreneurship, innovation and the economy.", "color": "#b45309" },
+    { "name": "Health", "slug": "health", "description": "Wellness, medicine, public health and healthy living.", "color": "#059669" },
+    { "name": "Tech", "slug": "tech", "description": "Technology, innovation and the digital future.", "color": "#4f46e5" }
+  ],
+  "authors": [
+    { "name": "Amina Yusuf", "slug": "amina-yusuf", "email": "amina@letustv.com", "bio": "Senior Correspondent, Politics and Policy." },
+    { "name": "Emeka Okafor", "slug": "emeka-okafor", "email": "emeka@letustv.com", "bio": "Business and Economy Editor." },
+    { "name": "Kemi Adewale", "slug": "kemi-adewale", "email": "kemi@letustv.com", "bio": "Sports Desk Lead." },
+    { "name": "Tunde Bello", "slug": "tunde-bello", "email": "tunde@letustv.com", "bio": "Entertainment and Culture Writer." },
+    { "name": "Dr Chiamaka Ude", "slug": "dr-chiamaka-ude", "email": "chiamaka@letustv.com", "bio": "Health and Science Correspondent." },
+    { "name": "David Adeyemi", "slug": "david-adeyemi", "email": "david@letustv.com", "bio": "Technology Reporter." }
+  ],
+  "articles": [
+    {
+      "title": "FG Unveils National Digital Economy Agenda to Power Youth Jobs",
+      "slug": "fg-unveils-national-digital-economy-agenda",
+      "excerpt": "A plan to expand broadband access and skill one million young people in digital trades.",
+      "category": "politics",
+      "author": "amina-yusuf",
+      "image": "/images/article-politics-1.webp",
+      "featured": true,
+      "views": 2480,
+      "daysAgo": 0,
+      "tags": ["economy", "youth"],
+      "body": [
+        "The Federal Government has unveiled an ambitious National Digital Economy Agenda designed to broaden broadband coverage, cut the cost of connectivity and equip one million young Nigerians with employable digital skills.",
+        "Industry analysts say the plan, if implemented with discipline, could reposition the country as a hub for software development, data centres and digital services."
+      ]
+    },
+    {
+      "title": "CBN Holds Rate as Inflation Eases for Third Consecutive Month",
+      "slug": "cbn-holds-rate-as-inflation-eases",
+      "excerpt": "The central bank left the benchmark rate unchanged, citing cooling food prices and improved reserves.",
+      "category": "business",
+      "author": "emeka-okafor",
+      "image": "/images/article-business-1.webp",
+      "featured": true,
+      "views": 1834,
+      "daysAgo": 1,
+      "tags": ["economy"],
+      "body": [
+        "Nigeria's central bank kept its benchmark interest rate unchanged this week, signalling confidence that the disinflation trend is taking hold.",
+        "Economists are split on whetherthe next move will be a cut or another hold as the bank balances price stability against growth ambitions."
+      ]
+    },
+    {
+      "title": "Super Eagles Set for Crunch AFCON Qualifier in Abuja",
+      "slug": "super-eagles-afcon-qualifier-abuja",
+      "excerpt": "Victory would all but seal qualificationand restore the feel-good factor around the national team.",
+      "category": "sports",
+      "author": "kemi-adewale",
+      "image": "/images/article-sports-1.webp",
+      "featured": true,
+      "views": 3105,
+      "daysAgo": 1,
+      "tags": ["football", "afcon"],
+      "body": [
+        "The Super Eagles trained under floodlights on Sunday evening, with the coach insistingthe focus is solely on the three points needed to edge closer to the next Africa Cup of Nations.",
+        "Kick-off is 8pm Nigerian time; Letus TV brings you live reaction from the stadium before and after the final whistle."
+      ]
+    },
+    {
+      "title": "Nollywood and Afrobeats Stars Unite for Mega Lagos Festival",
+      "slug": "nollywood-afrobeats-lagos-festival",
+      "excerpt": "A three-day celebration of Nigerian creativity bringing box-office directors, chart-topping actsand fashion design onto one stage.",
+      "category": "entertainment",
+      "author": "tunde-bello",
+      "image": "/images/article-ent-1.webp",
+      "featured": true,
+      "views": 2261,
+      "daysAgo": 2,
+      "tags": ["nollywood", "afrobeats"],
+      "body": [
+        "Lagos is about to become the beating heart of African pop culture asthe Entertainment Festival throws open its gates on Friday.",
+        "Letus TV will be on the ground with backstage accessand interviews with the stars shapingthe soundandsight of the continent."
+      ]
+    },
+    {
+      "title": "New Health Campaign Targets Silent Epidemic of Hypertension",
+      "slug": "health-campaign-hypertension-epidemic",
+      "excerpt": "Community health workers will screen blood pressure at one million doorsand connect patients to care.",
+      "category": "health",
+      "author": "dr-chiamaka-ude",
+      "image": "/images/article-health-1.webp",
+      "featured": false,
+      "views": 1240,
+      "daysAgo": 3,
+      "tags": ["health", "hypertension"],
+      "body": [
+        "Health authorities have launched a door-to-door campaign to tackle hypertension,a condition so often silent until it strikes.",
+        "Watch our documentary on the frontline health workers carrying this message into hard-to-reach communities."
+      ]
+    },
+    {
+      "title": "Inside Nigeria Startup Boom: Cities Building Africa Next Unicorns",
+      "slug": "inside-nigeria-startup-boom",
+      "excerpt": "From Yaba to Enugu,a new generation of founders is building global products form Lagos living roomsand co-working hubs.",
+      "category": "tech",
+      "author": "david-adeyemi",
+      "image": "/images/article-tech-1.webp",
+      "featured": false,
+      "views": 1980,
+      "daysAgo": 4,
+      "tags": ["startups", "technology"],
+      "body": [
+        "The loudest ideas in African technology are no longer confined to a single district.",
+        "We spoke to ten founders building everything from fintech rails to agritech marketplaces."
+      ]
+    },
+    {
+      "title": "Budget Debate: Lawmakers Demand Transparency on Infrastructure",
+      "slug": "budget-debate-infrastructure-transparency",
+      "excerpt": "A cross-party group is pushing for project-by-project reporting to endvague budget lines.",
+      "category": "politics",
+      "author": "amina-yusuf",
+      "image": "/images/article-politics-2.webp",
+      "featured": false,
+      "views": 1145,
+      "daysAgo": 7,
+      "tags": ["budget", "governance"],
+      "body": [
+        "A coalition of lawmakers across party lines has tabled a motion demanding project-level reportingwith timelinesand completion status.",
+        "Letus TV fact-checksthe numbersand digs into which projects have stalledand why."
+      ]
+    },
+    {
+      "title": "Solar Irrigation Helps Smallholder Farmers Beat the Dry Season",
+      "slug": "solar-irrigation-smallholder-farmers",
+      "excerpt": "Farmersare trading diesel pumps for solar systemsthat cut costsand extend growing seasons.",
+      "category": "business",
+      "author": "emeka-okafor",
+      "image": "/images/article-business-2.webp",
+      "featured": false,
+      "views": 876,
+      "daysAgo": 8,
+      "tags": ["agriculture", "energy"],
+      "body": [
+        "On a cassava farmin Ogun State,the hum of a solar water pump has replaced the rattle of diesel.",
+        "Farmerstell Letus TV thatthe real prize is not just yield,butpredictability of knowingthat water will come."
+      ]
+    },
+    {
+      "title": "Lagos Fashion Week: Designers Redefine African Luxury",
+      "slug": "lagos-fashion-week-african-luxury",
+      "excerpt": "Sustenable materials,bold silhouettesand a new generation of buyers are rewritingthe rules of fashion.",
+      "category": "entertainment",
+      "author": "tunde-bello",
+      "image": "/images/article-ent-2.webp",
+      "featured": false,
+      "views": 1540,
+      "daysAgo": 9,
+      "tags": ["fashion", "lifestyle"],
+      "body": [
+        "The runways of Lagos Fashion Week told a story of confidence: designers are no longer looking outward for validation.",
+        "Backstage,designers spoke about building supply chainsand protecting craft heritage while scaling."
+      ]
+    },
+    {
+      "title": "What Your Sleep Position Says About Your Health, Doctors Explain",
+      "slug": "sleep-position-health-doctors",
+      "excerpt": "On your back,side or stomach specialists breakdownethe scienceand simple fixes.",
+      "category": "health",
+      "author": "dr-chiamaka-ude",
+      "image": "/images/article-health-2.webp",
+      "featured": false,
+      "views": 720,
+      "daysAgo": 10,
+      "tags": ["sleep", "wellness"],
+      "body": [
+        "The way you sleep nightly affects more than comfort,itshapes breathing,joint healthand even digestion.",
+        "We asked doctors to settle the arguments your household probably has every night."
+      ]
+    },
+    {
+      "title": "5G and Beyond: What Expanding Connectivity Means for You",
+      "slug": "5g-connectivity-explained",
+      "excerpt": "Faster phones are only the beginning;the next wave will change healthcare,education and farming.",
+      "category": "tech",
+      "author": "david-adeyemi",
+      "image": "/images/article-tech-2.webp",
+      "featured": false,
+      "views": 1680,
+      "daysAgo": 11,
+      "tags": ["5g", "connectivity"],
+      "body": [
+        "The rollout of faster mobile networks is reaching more cities,butthe biggest gains will be felt far beyond gamingand video calls.",
+        "This explainer breaksup what the jargonmeansand what changes you will notice first."
+      ]
+    }
+  ],
+  "videos": [
+    { "title": "Letus TV Live: The Morning Brief", "slug": "letus-tv-morning-brief", "description": "Start your day with the headlines that matter,politics,business and society.", "category": "politics", "url": "https://www.youtube.com/watch?v=dQw4w9WgXc", "featured": true, "views": 4520, "daysAgo": 0 },
+    { "title": "Inside the Lagos Startup Ecosystem", "slug": "inside-lagos-startup-ecosystem", "description": "A documentary journey through Yaba hubs and the founders building Africa's future.", "category": "tech", "url": "https://www.youtube.com/watch?v=9bZkp7q19f0", "featured": false, "views": 3100, "daysAgo": 2 },
+    { "title": "The Changing Face of Nigerian Football", "slug": "changing-face-nigerian-football", "description": "From grassroots pitches to the national team, how the beautiful game is evolving.", "category": "sports", "url": "https://www.youtube.com/watch?v=M7lc1UVf-VE", "featured": false, "views": 2200, "daysAgo": 4 },
+    { "title": "Health Check: Hypertension Explained in 90 Seconds", "slug": "health-check-hypertension-90-seconds", "description": "Quick, practical advice on preventingand managing high blood pressure.", "category": "health", "url": "https://www.youtube.com/watch?v=ScMzIvxBSi4", "featured": false, "views": 1850, "daysAgo": 5 },
+    { "title": "Entertainment Weekly: The Festival Special", "slug": "entertainment-weekly-festival-special", "description": "Highlights from the Lagos Entertainment Festival,red carpets,backstageand beyond.", "category": "entertainment", "url": "https://www.youtube.com/watch?v=ysz5S6PUM-U", "featured": false, "views": 1400, "daysAgo": 7 },
+    { "title": "Business Focus: Agritech is Feeding the Future", "slug": "business-focus-agritech", "description": "Investorsand farmers on the technology quietly transforming food production.", "category": "business", "url": "https://www.youtube.com/watch?v=3JZ_D3ELK0", "featured": false, "views": 1200, "daysAgo": 9 }
+  ],
+  "breaking": [
+    { "headline": "JUST IN: FG announces nationwide digital economy launch for next week", "articleSlug": "fg-unveils-national-digital-economy-agenda", "priority": 3 },
+    { "headline": "BREAKING: Super Eagles squad confirmed for Abuja AFCON qualifier", "articleSlug": "super-eagles-afcon-qualifier-abuja", "priority": 1 }
+  ]
+}

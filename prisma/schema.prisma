@@ -1,0 +1,257 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  ADMIN
+  EDITOR
+  AUTHOR
+}
+
+enum ArticleStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum VideoType {
+  YOUTUBE
+  EXTERNAL
+  SELF_HOSTED
+}
+
+enum StreamType {
+  HLS
+  YOUTUBE
+  EMBED
+  EXTERNAL
+}
+
+enum MediaType {
+  IMAGE
+  VIDEO
+  DOCUMENT
+}
+
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  role         UserRole @default(AUTHOR)
+  bio          String?
+  avatarUrl    String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Author {
+  id        String    @id @default(cuid())
+  name      String
+  email     String?   @unique
+  bio       String?
+  photoUrl  String?
+  slug      String    @unique
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  articles  Article[]
+}
+
+model Category {
+  id          String    @id @default(cuid())
+  name        String
+  slug        String    @unique
+  description String?
+  imageUrl    String?
+  color       String?
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  articles    Article[]
+  videos      Video[]
+}
+
+model Article {
+  id             String         @id @default(cuid())
+  title          String
+  slug           String         @unique
+  excerpt        String?
+  body           String
+  featuredImage  String?
+  publishedAt    DateTime?
+  updatedAt      DateTime       @updatedAt
+  createdAt      DateTime       @default(now())
+  status         ArticleStatus  @default(DRAFT)
+  views          Int            @default(0)
+  isFeatured     Boolean        @default(false)
+  isBreaking     Boolean        @default(false)
+  seoTitle       String?
+  seoDescription String?
+  seoKeywords    String?
+  sharingImage   String?
+  authorId       String
+  categoryId     String
+  author         Author         @relation(fields: [authorId], references: [id], onDelete: Restrict)
+  category       Category       @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  tags           ArticleTags[]
+  articleViews   ArticleView[]
+  breakingNews   BreakingNews[]
+
+  @@index([slug])
+  @@index([status, publishedAt])
+  @@index([categoryId])
+  @@index([isFeatured, status])
+  @@index([isBreaking, status])
+}
+
+model Tag {
+  id       String        @id @default(cuid())
+  name     String
+  slug     String        @unique
+  articles ArticleTags[]
+}
+
+model ArticleTags {
+  articleId String
+  tagId     String
+  article   Article @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  tag       Tag     @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([articleId, tagId])
+}
+
+model Video {
+  id           String        @id @default(cuid())
+  title        String
+  slug         String        @unique
+  description  String?
+  thumbnailUrl String?
+  videoUrl     String?
+  videoType    VideoType     @default(YOUTUBE)
+  publishedAt  DateTime?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  status       ArticleStatus @default(PUBLISHED)
+  views        Int           @default(0)
+  isFeatured   Boolean       @default(false)
+  duration     String?
+  categoryId   String
+  category     Category      @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  videoViews   VideoView[]
+
+  @@index([slug])
+  @@index([status, publishedAt])
+  @@index([categoryId])
+  @@index([isFeatured, status])
+}
+
+model Media {
+  id        String    @id @default(cuid())
+  filename  String
+  url       String
+  type      MediaType @default(IMAGE)
+  mimeType  String?
+  size      Int?
+  altText   String?
+  createdAt DateTime  @default(now())
+
+  @@index([type, createdAt])
+}
+
+model BreakingNews {
+  id        String    @id @default(cuid())
+  headline  String
+  content   String?
+  isActive  Boolean   @default(true)
+  priority  Int       @default(0)
+  startsAt  DateTime?
+  expiresAt DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  articleId String?
+  article   Article?  @relation(fields: [articleId], references: [id], onDelete: SetNull)
+
+  @@index([isActive, startsAt, expiresAt])
+  @@index([priority])
+}
+
+model ArticleView {
+  id        String   @id @default(cuid())
+  articleId String
+  article   Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  ipHash    String?
+  viewedAt  DateTime @default(now())
+
+  @@index([articleId])
+  @@index([viewedAt])
+}
+
+model VideoView {
+  id       String   @id @default(cuid())
+  videoId  String
+  video    Video    @relation(fields: [videoId], references: [id], onDelete: Cascade)
+  ipHash   String?
+  viewedAt DateTime @default(now())
+
+  @@index([videoId])
+  @@index([viewedAt])
+}
+
+model Subscriber {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+}
+
+model LiveStreamSettings {
+  id           String     @id @default(cuid())
+  streamUrl    String?
+  streamType   StreamType @default(HLS)
+  title        String?
+  description  String?
+  thumbnailUrl String?
+  isLive       Boolean    @default(false)
+  isVisible    Boolean    @default(true)
+  updatedAt    DateTime   @updatedAt
+}
+
+model SiteSettings {
+  id                    String   @id @default(cuid())
+  siteName              String   @default("Letus TV")
+  tagline               String   @default("Let's Watch. Let's Know. Let's Connect.")
+  description           String?
+  logoUrl               String?
+  faviconUrl            String?
+  contactEmail          String?
+  phone                 String?
+  address               String?
+  facebookUrl           String?
+  instagramUrl          String?
+  youtubeUrl            String?
+  tiktokUrl             String?
+  twitterUrl            String?
+  googleAnalyticsId     String?
+  footerText            String?
+  seoDefaultTitle       String?
+  seoDefaultDescription String?
+  updatedAt             DateTime @updatedAt
+}
+
+model ContactMessage {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  subject   String?
+  message   String
+  createdAt DateTime @default(now())
+  isRead    Boolean  @default(false)
+
+  @@index([createdAt])
+}
