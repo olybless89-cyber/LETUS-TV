@@ -1,7 +1,6 @@
 import Link from "next/link";
-import { getChannelVideos, getLiveEmbedUrl } from "@/lib/youtube";
+import { getChannelVideos } from "@/lib/youtube";
 import { YouTubeVideoCard } from "@/components/youtube-video-card";
-import { ClickToPlayYouTube } from "@/components/click-to-play-youtube";
 import { SectionHeading } from "@/components/section-heading";
 import { TradingViewTickerTape } from "@/components/tradingview-ticker-tape";
 import { TradingViewAdvancedChart } from "@/components/tradingview-advanced-chart";
@@ -9,6 +8,8 @@ import { timeAgo } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
+
+const YOUTUBE_CHANNEL_URL = "https://youtube.com/@letus-tv";
 
 export default async function HomePage() {
   const videos = await getChannelVideos(9);
@@ -44,23 +45,23 @@ export default async function HomePage() {
             </div>
           </Link>
 
-          <div className="flex flex-col">
-            <h2 className="font-display text-sm font-bold tracking-tight text-ink-soft border-b border-line pb-2">
-              More from the channel
-            </h2>
-            {rest.slice(0, 4).map((video) => (
-              <Link key={video.id} href={`/videos/${video.id}`} className="group flex gap-4 py-4 border-b border-line">
-                <div className="relative h-20 w-28 shrink-0 overflow-hidden bg-line">
-                  <img src={video.thumbnailUrl} alt={video.title} className="h-full w-full object-cover" />
-                </div>
-                <div className="min-w-0">
-                  <h3 className="font-display text-base font-semibold leading-snug text-ink group-hover:text-blue">
-                    {video.title}
-                  </h3>
-                  <span className="mt-1 block text-xs text-ink-soft">{timeAgo(video.publishedAt)}</span>
-                </div>
-              </Link>
-            ))}
+          {/* Top-right: live FX chart */}
+          <div className="flex flex-col border border-line bg-blue-deep">
+            <div className="flex items-center justify-between border-b border-white/10 px-4 py-3">
+              <span className="font-display text-xs font-bold text-gold">USD/NGN &amp; Markets</span>
+              <a
+                href={YOUTUBE_CHANNEL_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 font-display text-xs font-bold text-live"
+              >
+                <span className="h-2 w-2 rounded-full bg-live animate-live-pulse" />
+                Watch Live
+              </a>
+            </div>
+            <div className="flex-1">
+              <TradingViewAdvancedChart defaultSymbol="FX_IDC:USDNGN" />
+            </div>
           </div>
         </section>
       )}
@@ -70,36 +71,49 @@ export default async function HomePage() {
         <TradingViewTickerTape />
       </section>
 
-      {/* Markets */}
-      <section className="space-y-6">
-        <SectionHeading title="Markets" accent="#e3a336" />
-        <div className="border border-line bg-blue-deep p-1">
-          <TradingViewAdvancedChart defaultSymbol="FX_IDC:USDNGN" />
-        </div>
-      </section>
+      {/* More from the channel */}
+      {rest.length > 0 && (
+        <section className="space-y-6">
+          <SectionHeading title="More from the channel" />
+          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+            {rest.slice(0, 4).map((video) => (
+              <Link key={video.id} href={`/videos/${video.id}`} className="group block">
+                <div className="relative aspect-video w-full overflow-hidden bg-line">
+                  <img src={video.thumbnailUrl} alt={video.title} className="h-full w-full object-cover" />
+                </div>
+                <h3 className="mt-2 font-display text-sm font-semibold leading-snug text-ink group-hover:text-blue">
+                  {video.title}
+                </h3>
+                <span className="mt-1 block text-xs text-ink-soft">{timeAgo(video.publishedAt)}</span>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
 
-      {/* Live now */}
+      {/* Watch on YouTube CTA */}
       <section className="bg-blue-deep text-paper">
-        <div className="grid gap-6 p-6 sm:p-8 lg:grid-cols-[1fr_1fr] lg:items-center">
+        <div className="flex flex-col items-start gap-4 p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8">
           <div>
             <span className="inline-flex items-center gap-2 font-display text-xs font-bold text-live">
               <span className="h-2 w-2 rounded-full bg-live animate-live-pulse" />
               ON AIR NOW
             </span>
             <h2 className="mt-3 font-display text-2xl font-bold sm:text-3xl">
-              Letus TV Live
+              Watch Letus TV Live
             </h2>
             <p className="mt-2 max-w-md text-sm text-paper/70">
-              24/7 live television: news, current affairs and entertainment.
+              24/7 live television: news, current affairs and entertainment — live now on our YouTube channel.
             </p>
-            <Link
-              href="/live"
-              className="mt-5 inline-block bg-gold px-5 py-2.5 font-display text-sm font-bold text-blue-deep"
-            >
-              Watch Live
-            </Link>
           </div>
-          <ClickToPlayYouTube embedUrl={getLiveEmbedUrl()} title="Letus TV Live" isLive />
+          <a
+            href={YOUTUBE_CHANNEL_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block shrink-0 bg-gold px-5 py-2.5 font-display text-sm font-bold text-blue-deep"
+          >
+            Watch on YouTube
+          </a>
         </div>
       </section>
 

@@ -69,10 +69,3 @@ export async function getChannelVideoById(id: string): Promise<YouTubeVideoItem 
   return items.find((v) => v.id === id) ?? null;
 }
 
-export function getLiveEmbedUrl(autoplay: boolean = false): string {
-  const params = new URLSearchParams({
-    channel: LETUS_TV_CHANNEL_ID,
-    ...(autoplay ? { autoplay: "1", mute: "0" } : {}),
-  });
-  return `https://www.youtube.com/embed/live_stream?${params.toString()}`;
-}

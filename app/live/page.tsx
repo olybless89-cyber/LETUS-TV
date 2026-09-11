@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
-import { getChannelVideos, getLiveEmbedUrl } from "@/lib/youtube";
-import { ClickToPlayYouTube } from "@/components/click-to-play-youtube";
+import { getChannelVideos } from "@/lib/youtube";
 import { YouTubeVideoCard } from "@/components/youtube-video-card";
 import { SectionHeading } from "@/components/section-heading";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
+
+const YOUTUBE_CHANNEL_URL = "https://youtube.com/@letus-tv";
 
 export const metadata: Metadata = {
   title: "Live TV — Letus TV",
@@ -25,16 +26,20 @@ export default async function LivePage() {
           Letus TV Live
         </h1>
         <p className="mt-1 max-w-2xl text-ink-soft">
-          24/7 live television: news, current affairs and entertainment. Tap play to join the broadcast.
+          24/7 live television: news, current affairs and entertainment — live now on our YouTube channel.
         </p>
       </div>
 
-      <div className="mx-auto max-w-4xl">
-        <ClickToPlayYouTube
-          embedUrl={getLiveEmbedUrl()}
-          title="Letus TV Live"
-          isLive
-        />
+      <div className="mx-auto max-w-2xl">
+        <a
+          href={YOUTUBE_CHANNEL_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center justify-center gap-3 bg-live px-6 py-4 font-display text-lg font-bold text-paper"
+        >
+          <span className="h-2.5 w-2.5 rounded-full bg-paper animate-live-pulse" />
+          Watch Live on YouTube
+        </a>
       </div>
 
       {recent.length > 0 && (
