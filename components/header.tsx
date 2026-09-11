@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import type { BreakingNews, Article } from "@prisma/client";
+import type { LiveNewsItem } from "@/lib/rss";
 
 const NAV_LINKS = [
   { href: "/", label: "Home" },
@@ -12,13 +12,11 @@ const NAV_LINKS = [
   { href: "/contact", label: "Contact" },
 ];
 
-type BreakingItem = BreakingNews & { article: Article | null };
-
 export function Header({
   breaking,
   siteName,
 }: {
-  breaking: BreakingItem[];
+  breaking: LiveNewsItem[];
   siteName?: string;
 }) {
   const items = breaking.length > 0 ? breaking : null;
@@ -66,13 +64,15 @@ export function Header({
             <div className="relative flex-1 overflow-hidden">
               <div className="flex w-max gap-16 animate-ticker whitespace-nowrap">
                 {[...items, ...items].map((item, i) => (
-                  <Link
-                    key={`${item.id}-${i}`}
-                    href={item.article ? `/articles/${item.article.slug}` : "/articles"}
+                  <a
+                    key={`${item.link}-${i}`}
+                    href={item.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="text-sm hover:underline"
                   >
-                    {item.headline}
-                  </Link>
+                    {item.title}
+                  </a>
                 ))}
               </div>
             </div>

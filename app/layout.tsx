@@ -3,7 +3,8 @@ import { Space_Grotesk, Source_Serif_4 } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
-import { getActiveBreakingNews, getSiteSettings } from "@/lib/server-data";
+import { getSiteSettings } from "@/lib/server-data";
+import { getLiveNews } from "@/lib/rss";
 
 const display = Space_Grotesk({
   subsets: ["latin"],
@@ -26,7 +27,7 @@ export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   const [breaking, settings] = await Promise.all([
-    getActiveBreakingNews().catch(() => []),
+    getLiveNews(6).catch(() => []),
     getSiteSettings().catch(() => null),
   ]);
 

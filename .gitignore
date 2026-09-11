@@ -16,5 +16,4 @@ vercel.json
 *.tsbuildinfo
 next-env.d.ts
 public/uploads/
-.admin_tmp*.env.save
-.env
+.admin_tmp*

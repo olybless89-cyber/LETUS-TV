@@ -4,6 +4,13 @@ import { NewsletterForm } from "@/components/newsletter-form";
 
 const CATEGORIES = ["entertainment", "sports", "politics", "business", "health", "tech"];
 
+const SOCIAL_LINKS = [
+  { label: "YouTube", url: "https://youtube.com/@letus-tv" },
+  { label: "Instagram", url: "https://www.instagram.com/letus_tv" },
+  { label: "TikTok", url: "https://www.tiktok.com/@letustv" },
+  { label: "Facebook", url: "https://www.facebook.com/share/14neP8cQQQV/" },
+];
+
 export function Footer({ settings }: { settings: SiteSettings | null }) {
   const year = new Date().getFullYear();
 
@@ -59,11 +66,17 @@ export function Footer({ settings }: { settings: SiteSettings | null }) {
         <div className="container-page flex flex-col gap-2 py-5 text-xs text-paper/60 sm:flex-row sm:items-center sm:justify-between">
           <p>&copy; {year} Letus TV. All rights reserved.</p>
           <div className="flex gap-4">
-            {settings?.facebookUrl && <a href={settings.facebookUrl} className="hover:text-gold">Facebook</a>}
-            {settings?.instagramUrl && <a href={settings.instagramUrl} className="hover:text-gold">Instagram</a>}
-            {settings?.youtubeUrl && <a href={settings.youtubeUrl} className="hover:text-gold">YouTube</a>}
-            {settings?.tiktokUrl && <a href={settings.tiktokUrl} className="hover:text-gold">TikTok</a>}
-            {settings?.twitterUrl && <a href={settings.twitterUrl} className="hover:text-gold">X</a>}
+            {SOCIAL_LINKS.map((s) => (
+              <a
+                key={s.label}
+                href={s.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-gold"
+              >
+                {s.label}
+              </a>
+            ))}
           </div>
         </div>
       </div>
