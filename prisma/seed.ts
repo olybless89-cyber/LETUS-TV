@@ -76,6 +76,7 @@ async function main() {
     const slug = art.slug;
     const data = {
       title: art.title,
+      slug,
       excerpt: art.excerpt,
       body: buildBody(art.body),
       featuredImage: art.image,
