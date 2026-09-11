@@ -21,6 +21,9 @@ enum ArticleStatus {
 
 enum VideoType {
   YOUTUBE
+  INSTAGRAM
+  TIKTOK
+  FACEBOOK
   EXTERNAL
   SELF_HOSTED
 }
@@ -36,6 +39,12 @@ enum MediaType {
   IMAGE
   VIDEO
   DOCUMENT
+}
+
+enum SocialPlatform {
+  INSTAGRAM
+  TIKTOK
+  FACEBOOK
 }
 
 model User {
@@ -222,6 +231,51 @@ model LiveStreamSettings {
   updatedAt    DateTime   @updatedAt
 }
 
+model SocialPost {
+  id        String         @id @default(cuid())
+  platform  SocialPlatform
+  url       String
+  caption   String?
+  isActive  Boolean        @default(true)
+  order     Int            @default(0)
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+
+  @@index([isActive, order])
+}
+
+model Poll {
+  id        String       @id @default(cuid())
+  question  String
+  isActive  Boolean      @default(true)
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  options   PollOption[]
+  pollVotes PollVote[]
+}
+
+model PollOption {
+  id        String     @id @default(cuid())
+  pollId    String
+  poll      Poll       @relation(fields: [pollId], references: [id], onDelete: Cascade)
+  label     String
+  votes     Int        @default(0)
+  order     Int        @default(0)
+  pollVotes PollVote[]
+}
+
+model PollVote {
+  id       String     @id @default(cuid())
+  pollId   String
+  optionId String
+  ipHash   String?
+  votedAt  DateTime   @default(now())
+  poll     Poll       @relation(fields: [pollId], references: [id], onDelete: Cascade)
+  option   PollOption @relation(fields: [optionId], references: [id], onDelete: Cascade)
+
+  @@index([pollId, ipHash])
+}
+
 model SiteSettings {
   id                    String   @id @default(cuid())
   siteName              String   @default("Letus TV")
@@ -241,6 +295,14 @@ model SiteSettings {
   footerText            String?
   seoDefaultTitle       String?
   seoDefaultDescription String?
+  conversationCtaEnabled    Boolean  @default(false)
+  conversationCtaHeading    String?
+  conversationCtaText       String?
+  conversationCtaUrl        String?
+  conversationCtaButtonText String?
+  audioRoomsEnabled         Boolean  @default(false)
+  audioRoomsHeading         String?
+  audioRoomsText            String?
   updatedAt             DateTime @updatedAt
 }
 

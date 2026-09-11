@@ -119,6 +119,66 @@ export async function getFeaturedVideos(limit: number = 4) {
   });
 }
 
+export async function getPopularVideos(limit: number = 5) {
+  return prisma.video.findMany({
+    where: { status: "PUBLISHED" },
+    orderBy: [{ views: "desc" }, { publishedAt: "desc" }],
+    include: { category: true },
+    take: limit,
+  });
+}
+
+export async function getAllVideosForAdmin() {
+  return prisma.video.findMany({
+    orderBy: { createdAt: "desc" },
+    include: { category: true },
+  });
+}
+
+export async function getVideoByIdForAdmin(id: string) {
+  return prisma.video.findUnique({ where: { id } });
+}
+
+export async function getActiveSocialPosts(limit: number = 6) {
+  return prisma.socialPost.findMany({
+    where: { isActive: true },
+    orderBy: [{ order: "asc" }, { createdAt: "desc" }],
+    take: limit,
+  });
+}
+
+export async function getAllSocialPostsForAdmin() {
+  return prisma.socialPost.findMany({
+    orderBy: [{ order: "asc" }, { createdAt: "desc" }],
+  });
+}
+
+export async function getSocialPostByIdForAdmin(id: string) {
+  return prisma.socialPost.findUnique({ where: { id } });
+}
+
+export async function getActivePoll() {
+  return prisma.poll.findFirst({
+    where: { isActive: true },
+    orderBy: { createdAt: "desc" },
+    include: { options: { orderBy: { order: "asc" } } },
+  });
+}
+
+export async function getAllPollsForAdmin() {
+  return prisma.poll.findMany({
+    orderBy: { createdAt: "desc" },
+    include: { options: { orderBy: { order: "asc" } } },
+  });
+}
+
+export async function getPollByIdForAdmin(id: string) {
+  return prisma.poll.findUnique({
+    where: { id },
+    include: { options: { orderBy: { order: "asc" } } },
+  });
+}
+
 export async function getLiveStreamSettings() {
   return prisma.liveStreamSettings.findFirst({
     orderBy: { updatedAt: "desc" },
