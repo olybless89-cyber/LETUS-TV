@@ -7,6 +7,7 @@ type TickerItem = { title: string; href: string };
 const NAV_LINKS = [
   { href: "/", label: "Home" },
   { href: "/live", label: "Live TV" },
+  { href: "/articles", label: "News" },
   { href: "/videos", label: "Videos" },
   { href: "/contact", label: "Contact" },
 ];

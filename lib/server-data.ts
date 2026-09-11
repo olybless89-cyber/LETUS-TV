@@ -179,6 +179,40 @@ export async function getPollByIdForAdmin(id: string) {
   });
 }
 
+export async function getBreakingArticles(limit: number = 6) {
+  return prisma.article.findMany({
+    where: { status: "PUBLISHED", isBreaking: true },
+    orderBy: { publishedAt: "desc" },
+    take: limit,
+  });
+}
+
+export async function getAllArticlesForAdmin() {
+  return prisma.article.findMany({
+    orderBy: { createdAt: "desc" },
+    include: { category: true, author: true },
+  });
+}
+
+export async function getArticleByIdForAdmin(id: string) {
+  return prisma.article.findUnique({ where: { id } });
+}
+
+export async function getOrCreateAuthorForAdmin(user: { id: string; email: string; name?: string }) {
+  const existing = await prisma.author.findUnique({ where: { email: user.email } });
+  if (existing) return existing;
+
+  const name = user.name || user.email.split("@")[0];
+  const baseSlug = name.toLowerCase().replace(/[^\w\s-]/g, "").trim().replace(/\s+/g, "-") || "admin";
+  let slug = baseSlug;
+  let i = 1;
+  while (await prisma.author.findUnique({ where: { slug } })) {
+    slug = `${baseSlug}-${i++}`;
+  }
+
+  return prisma.author.create({ data: { name, email: user.email, slug } });
+}
+
 export async function getLiveStreamSettings() {
   return prisma.liveStreamSettings.findFirst({
     orderBy: { updatedAt: "desc" },

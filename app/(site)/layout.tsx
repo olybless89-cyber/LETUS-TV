@@ -3,7 +3,7 @@ import { Space_Grotesk, Source_Serif_4 } from "next/font/google";
 import "../globals.css";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
-import { getLatestVideos, getSiteSettings } from "@/lib/server-data";
+import { getLatestVideos, getSiteSettings, getBreakingArticles } from "@/lib/server-data";
 
 const display = Space_Grotesk({
   subsets: ["latin"],
@@ -25,11 +25,15 @@ export const metadata: Metadata = {
 export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const [videos, settings] = await Promise.all([
+  const [videos, settings, breakingArticles] = await Promise.all([
     getLatestVideos(6).catch(() => []),
     getSiteSettings().catch(() => null),
+    getBreakingArticles(6).catch(() => []),
   ]);
-  const breaking = videos.map((v) => ({ title: v.title, href: v.videoUrl ?? "#" }));
+  const breaking =
+    breakingArticles.length > 0
+      ? breakingArticles.map((a) => ({ title: a.title, href: `/articles/${a.slug}` }))
+      : videos.map((v) => ({ title: v.title, href: v.videoUrl ?? "#" }));
 
   return (
     <html lang="en">

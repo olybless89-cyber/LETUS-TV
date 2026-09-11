@@ -1,8 +1,9 @@
 import Link from "next/link";
-import { getFeaturedVideos, getLatestVideos, getPopularVideos, getLiveStreamSettings, getActiveSocialPosts, getActivePoll, getSiteSettings } from "@/lib/server-data";
+import { getFeaturedVideos, getLatestVideos, getPopularVideos, getLiveStreamSettings, getActiveSocialPosts, getActivePoll, getSiteSettings, getHeroArticles } from "@/lib/server-data";
 import { SocialPostEmbed } from "@/components/embeds/social-post-embed";
 import { PollWidget } from "@/components/poll-widget";
 import { JoinConversationCard, AudioRoomsCard } from "@/components/promo-cards";
+import { ArticleCard } from "@/components/article-card";
 import { SectionHeading } from "@/components/section-heading";
 import { LiveHeroBox } from "@/components/live-hero-box";
 import { TradingViewTickerTape } from "@/components/tradingview-ticker-tape";
@@ -26,7 +27,7 @@ function EmptyCard({ message }: { message: string }) {
 }
 
 export default async function HomePage() {
-  const [featuredList, popular, latest, live, socialPosts, poll, settings] = await Promise.all([
+  const [featuredList, popular, latest, live, socialPosts, poll, settings, heroArticles] = await Promise.all([
     getFeaturedVideos(1),
     getPopularVideos(5),
     getLatestVideos(12),
@@ -34,7 +35,9 @@ export default async function HomePage() {
     getActiveSocialPosts(6),
     getActivePoll(),
     getSiteSettings(),
+    getHeroArticles(5),
   ]);
+  const [leadArticle, ...pairedArticles] = heroArticles;
 
   const featured = featuredList[0] ?? latest[0] ?? null;
   const rest = latest.filter((v) => v.id !== featured?.id);
@@ -134,6 +137,21 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Latest News */}
+      {leadArticle && (
+        <section className="space-y-6">
+          <SectionHeading title="Latest News" href="/articles" hrefLabel="All news" />
+          <div className="grid gap-8 lg:grid-cols-[1.4fr_1fr]">
+            <ArticleCard article={leadArticle} />
+            <div className="flex flex-col">
+              {pairedArticles.slice(0, 4).map((article) => (
+                <ArticleCard key={article.id} article={article} variant="paired" />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Market ticker */}
       <section className="-mx-5 sm:-mx-0">
