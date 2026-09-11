@@ -1,11 +1,15 @@
 import Image from "next/image";
-import Link from "next/link";
 import type { YouTubeVideoItem } from "@/lib/youtube";
 import { timeAgo } from "@/lib/utils";
 
 export function YouTubeVideoCard({ video }: { video: YouTubeVideoItem }) {
   return (
-    <Link href={`/videos/${video.id}`} className="group block">
+    <a
+      href={`https://www.youtube.com/watch?v=${video.id}`}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="group block"
+    >
       <div className="relative aspect-video w-full overflow-hidden bg-ink">
         <Image
           src={video.thumbnailUrl}
@@ -27,6 +31,6 @@ export function YouTubeVideoCard({ video }: { video: YouTubeVideoItem }) {
         </h3>
         <span className="mt-1 block text-xs text-ink-soft">{timeAgo(video.publishedAt)}</span>
       </div>
-    </Link>
+    </a>
   );
 }

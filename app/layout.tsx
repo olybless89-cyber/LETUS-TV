@@ -30,7 +30,7 @@ export default async function RootLayout({
     getChannelVideos(6).catch(() => []),
     getSiteSettings().catch(() => null),
   ]);
-  const breaking = videos.map((v) => ({ title: v.title, href: `/videos/${v.id}` }));
+  const breaking = videos.map((v) => ({ title: v.title, href: `https://www.youtube.com/watch?v=${v.id}` }));
 
   return (
     <html lang="en">

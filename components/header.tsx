@@ -62,13 +62,15 @@ export function Header({
             <div className="relative flex-1 overflow-hidden">
               <div className="flex w-max gap-16 animate-ticker whitespace-nowrap">
                 {[...items, ...items].map((item, i) => (
-                  <Link
+                  <a
                     key={`${item.href}-${i}`}
                     href={item.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="text-sm hover:underline"
                   >
                     {item.title}
-                  </Link>
+                  </a>
                 ))}
               </div>
             </div>

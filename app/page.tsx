@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { getChannelVideos } from "@/lib/youtube";
 import { YouTubeVideoCard } from "@/components/youtube-video-card";
 import { SectionHeading } from "@/components/section-heading";
@@ -20,7 +19,12 @@ export default async function HomePage() {
       {/* Featured — latest upload */}
       {featured && (
         <section className="grid gap-6 lg:grid-cols-[1.6fr_1fr]">
-          <Link href={`/videos/${featured.id}`} className="group relative block overflow-hidden bg-ink">
+          <a
+            href={`https://www.youtube.com/watch?v=${featured.id}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group relative block overflow-hidden bg-ink"
+          >
             <div className="relative aspect-[16/10] w-full">
               <img
                 src={featured.thumbnailUrl}
@@ -43,9 +47,7 @@ export default async function HomePage() {
               </h1>
               <p className="mt-2 text-sm text-paper/70">{timeAgo(featured.publishedAt)}</p>
             </div>
-          </Link>
-
-          {/* Top-right: live FX chart */}
+          </a>
           <div className="flex flex-col border border-line bg-blue-deep">
             <div className="flex items-center justify-between border-b border-white/10 px-4 py-3">
               <span className="font-display text-xs font-bold text-gold">USD/NGN &amp; Markets</span>
@@ -77,7 +79,13 @@ export default async function HomePage() {
           <SectionHeading title="More from the channel" />
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
             {rest.slice(0, 4).map((video) => (
-              <Link key={video.id} href={`/videos/${video.id}`} className="group block">
+              <a
+                key={video.id}
+                href={`https://www.youtube.com/watch?v=${video.id}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group block"
+              >
                 <div className="relative aspect-video w-full overflow-hidden bg-line">
                   <img src={video.thumbnailUrl} alt={video.title} className="h-full w-full object-cover" />
                 </div>
@@ -85,7 +93,7 @@ export default async function HomePage() {
                   {video.title}
                 </h3>
                 <span className="mt-1 block text-xs text-ink-soft">{timeAgo(video.publishedAt)}</span>
-              </Link>
+              </a>
             ))}
           </div>
         </section>
