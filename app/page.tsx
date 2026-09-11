@@ -1,8 +1,5 @@
-import Image from "next/image";
 import Link from "next/link";
-import { getLiveNews, getLiveNewsByCategory, type LiveNewsCategory } from "@/lib/rss";
 import { getChannelVideos, getLiveEmbedUrl } from "@/lib/youtube";
-import { LiveNewsCard } from "@/components/live-news-card";
 import { YouTubeVideoCard } from "@/components/youtube-video-card";
 import { ClickToPlayYouTube } from "@/components/click-to-play-youtube";
 import { SectionHeading } from "@/components/section-heading";
@@ -13,61 +10,56 @@ import { timeAgo } from "@/lib/utils";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
-const RAIL_CATEGORIES: { key: LiveNewsCategory; label: string; color: string }[] = [
-  { key: "business", label: "Business", color: "#2f6fed" },
-  { key: "tech", label: "Technology", color: "#e3a336" },
-];
-
 export default async function HomePage() {
-  const [news, videos, ...railFeeds] = await Promise.all([
-    getLiveNews(9),
-    getChannelVideos(4),
-    ...RAIL_CATEGORIES.map((c) => getLiveNewsByCategory(c.key, 4)),
-  ]);
-
-  const [lead, ...rundown] = news;
+  const videos = await getChannelVideos(9);
+  const [featured, ...rest] = videos;
 
   return (
     <div className="container-page py-8 space-y-16">
-      {/* Hero rundown */}
-      {lead && (
+      {/* Featured — latest upload */}
+      {featured && (
         <section className="grid gap-6 lg:grid-cols-[1.6fr_1fr]">
-          <a
-            href={lead.link}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group relative block overflow-hidden bg-ink"
-          >
+          <Link href={`/videos/${featured.id}`} className="group relative block overflow-hidden bg-ink">
             <div className="relative aspect-[16/10] w-full">
-              {lead.imageUrl && (
-                <Image
-                  src={lead.imageUrl}
-                  alt={lead.title}
-                  fill
-                  priority
-                  unoptimized
-                  className="object-cover opacity-90 transition-opacity group-hover:opacity-100"
-                />
-              )}
+              <img
+                src={featured.thumbnailUrl}
+                alt={featured.title}
+                className="absolute inset-0 h-full w-full object-cover opacity-90 transition-opacity group-hover:opacity-100"
+              />
               <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/10 to-transparent" />
+              <span className="absolute inset-0 flex items-center justify-center">
+                <span className="flex h-16 w-16 items-center justify-center rounded-full bg-paper/90 transition-transform group-hover:scale-110">
+                  <span className="ml-1.5 border-y-[12px] border-l-[20px] border-y-transparent border-l-ink" />
+                </span>
+              </span>
             </div>
             <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-7">
               <span className="inline-block font-display text-xs font-bold px-2 py-1 rounded-sm bg-blue text-paper">
-                {lead.source}
+                Letus TV
               </span>
               <h1 className="mt-3 max-w-xl font-display text-2xl font-bold leading-tight text-paper sm:text-3xl lg:text-4xl">
-                {lead.title}
+                {featured.title}
               </h1>
-              <p className="mt-2 text-sm text-paper/70">{timeAgo(lead.publishedAt)}</p>
+              <p className="mt-2 text-sm text-paper/70">{timeAgo(featured.publishedAt)}</p>
             </div>
-          </a>
+          </Link>
 
           <div className="flex flex-col">
             <h2 className="font-display text-sm font-bold tracking-tight text-ink-soft border-b border-line pb-2">
-              Also in the rundown
+              More from the channel
             </h2>
-            {rundown.slice(0, 4).map((item, i) => (
-              <LiveNewsCard key={`${item.link}-${i}`} item={item} variant="horizontal" />
+            {rest.slice(0, 4).map((video) => (
+              <Link key={video.id} href={`/videos/${video.id}`} className="group flex gap-4 py-4 border-b border-line">
+                <div className="relative h-20 w-28 shrink-0 overflow-hidden bg-line">
+                  <img src={video.thumbnailUrl} alt={video.title} className="h-full w-full object-cover" />
+                </div>
+                <div className="min-w-0">
+                  <h3 className="font-display text-base font-semibold leading-snug text-ink group-hover:text-blue">
+                    {video.title}
+                  </h3>
+                  <span className="mt-1 block text-xs text-ink-soft">{timeAgo(video.publishedAt)}</span>
+                </div>
+              </Link>
             ))}
           </div>
         </section>
@@ -111,40 +103,12 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Latest news grid */}
-      <section className="space-y-6">
-        <SectionHeading title="Latest News" href="/articles" hrefLabel="All news" />
-        {news.length === 0 ? (
-          <p className="text-ink-soft">Live feeds are temporarily unavailable. Check back shortly.</p>
-        ) : (
-          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {news.map((item, i) => (
-              <LiveNewsCard key={`${item.link}-${i}`} item={item} />
-            ))}
-          </div>
-        )}
-      </section>
-
-      {/* Category rails */}
-      {RAIL_CATEGORIES.map((cat, i) => (
-        railFeeds[i].length > 0 && (
-          <section key={cat.key} className="space-y-6">
-            <SectionHeading title={cat.label} href={`/category/${cat.key}`} accent={cat.color} />
-            <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-              {railFeeds[i].map((item, j) => (
-                <LiveNewsCard key={`${item.link}-${j}`} item={item} variant="compact" />
-              ))}
-            </div>
-          </section>
-        )
-      ))}
-
-      {/* Videos */}
+      {/* All videos */}
       {videos.length > 0 && (
         <section className="space-y-6">
-          <SectionHeading title="Latest Videos" href="/videos" hrefLabel="All videos" />
+          <SectionHeading title="Latest from Letus TV" href="/videos" hrefLabel="All videos" />
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-            {videos.map((video) => (
+            {videos.slice(0, 8).map((video) => (
               <YouTubeVideoCard key={video.id} video={video} />
             ))}
           </div>

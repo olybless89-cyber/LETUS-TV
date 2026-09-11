@@ -1,14 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
-import type { LiveNewsItem } from "@/lib/rss";
+
+type TickerItem = { title: string; href: string };
 
 const NAV_LINKS = [
   { href: "/", label: "Home" },
   { href: "/live", label: "Live TV" },
-  { href: "/articles", label: "News" },
   { href: "/videos", label: "Videos" },
-  { href: "/category/entertainment", label: "Entertainment" },
-  { href: "/category/sports", label: "Sports" },
   { href: "/contact", label: "Contact" },
 ];
 
@@ -16,7 +14,7 @@ export function Header({
   breaking,
   siteName,
 }: {
-  breaking: LiveNewsItem[];
+  breaking: TickerItem[];
   siteName?: string;
 }) {
   const items = breaking.length > 0 ? breaking : null;
@@ -64,15 +62,13 @@ export function Header({
             <div className="relative flex-1 overflow-hidden">
               <div className="flex w-max gap-16 animate-ticker whitespace-nowrap">
                 {[...items, ...items].map((item, i) => (
-                  <a
-                    key={`${item.link}-${i}`}
-                    href={item.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                  <Link
+                    key={`${item.href}-${i}`}
+                    href={item.href}
                     className="text-sm hover:underline"
                   >
                     {item.title}
-                  </a>
+                  </Link>
                 ))}
               </div>
             </div>

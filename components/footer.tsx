@@ -2,8 +2,6 @@ import Link from "next/link";
 import type { SiteSettings } from "@prisma/client";
 import { NewsletterForm } from "@/components/newsletter-form";
 
-const CATEGORIES = ["entertainment", "sports", "politics", "business", "health", "tech"];
-
 const SOCIAL_LINKS = [
   { label: "YouTube", url: "https://youtube.com/@letus-tv" },
   { label: "Instagram", url: "https://www.instagram.com/letus_tv" },
@@ -31,15 +29,10 @@ export function Footer({ settings }: { settings: SiteSettings | null }) {
         </div>
 
         <div>
-          <h3 className="font-display text-sm font-semibold text-paper/60">Sections</h3>
+          <h3 className="font-display text-sm font-semibold text-paper/60">Watch</h3>
           <ul className="mt-4 space-y-2 text-sm">
-            {CATEGORIES.map((slug) => (
-              <li key={slug}>
-                <Link href={`/category/${slug}`} className="capitalize hover:text-gold">
-                  {slug}
-                </Link>
-              </li>
-            ))}
+            <li><Link href="/live" className="hover:text-gold">Watch Live</Link></li>
+            <li><Link href="/videos" className="hover:text-gold">All Videos</Link></li>
           </ul>
         </div>
 
@@ -47,7 +40,6 @@ export function Footer({ settings }: { settings: SiteSettings | null }) {
           <h3 className="font-display text-sm font-semibold text-paper/60">Letus TV</h3>
           <ul className="mt-4 space-y-2 text-sm">
             <li><Link href="/live" className="hover:text-gold">Watch Live</Link></li>
-            <li><Link href="/articles" className="hover:text-gold">Latest News</Link></li>
             <li><Link href="/videos" className="hover:text-gold">Videos</Link></li>
             <li><Link href="/contact" className="hover:text-gold">Contact Us</Link></li>
           </ul>

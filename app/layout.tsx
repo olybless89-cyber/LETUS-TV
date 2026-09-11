@@ -4,7 +4,7 @@ import "./globals.css";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { getSiteSettings } from "@/lib/server-data";
-import { getLiveNews } from "@/lib/rss";
+import { getChannelVideos } from "@/lib/youtube";
 
 const display = Space_Grotesk({
   subsets: ["latin"],
@@ -26,10 +26,11 @@ export const metadata: Metadata = {
 export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const [breaking, settings] = await Promise.all([
-    getLiveNews(6).catch(() => []),
+  const [videos, settings] = await Promise.all([
+    getChannelVideos(6).catch(() => []),
     getSiteSettings().catch(() => null),
   ]);
+  const breaking = videos.map((v) => ({ title: v.title, href: `/videos/${v.id}` }));
 
   return (
     <html lang="en">
