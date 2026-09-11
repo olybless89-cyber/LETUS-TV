@@ -2,7 +2,7 @@ import { getChannelVideos } from "@/lib/youtube";
 import { YouTubeVideoCard } from "@/components/youtube-video-card";
 import { SectionHeading } from "@/components/section-heading";
 import { TradingViewTickerTape } from "@/components/tradingview-ticker-tape";
-import { TradingViewAdvancedChart } from "@/components/tradingview-advanced-chart";
+import { TradingViewMarketOverview } from "@/components/tradingview-market-overview";
 import { timeAgo } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
@@ -50,7 +50,7 @@ export default async function HomePage() {
           </a>
           <div className="flex flex-col border border-line bg-blue-deep">
             <div className="flex items-center justify-between border-b border-white/10 px-4 py-3">
-              <span className="font-display text-xs font-bold text-gold">USD/NGN &amp; Markets</span>
+              <span className="font-display text-xs font-bold text-gold">World FX Markets</span>
               <a
                 href={YOUTUBE_CHANNEL_URL}
                 target="_blank"
@@ -62,7 +62,7 @@ export default async function HomePage() {
               </a>
             </div>
             <div className="flex-1">
-              <TradingViewAdvancedChart defaultSymbol="FX_IDC:USDNGN" />
+              <TradingViewMarketOverview />
             </div>
           </div>
         </section>
