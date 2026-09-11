@@ -14,9 +14,14 @@ export default async function AdminSocialPage() {
             Real embedded posts from Instagram, TikTok, or Facebook — shown on the homepage.
           </p>
         </div>
-        <Link href="/admin/social/new" className="bg-blue px-4 py-2.5 font-display text-sm font-bold text-paper">
-          + Add a post
-        </Link>
+        <div className="flex gap-3">
+          <Link href="/admin/social/bulk" className="border border-white/10 px-4 py-2.5 font-display text-sm font-bold text-paper hover:bg-white/5">
+            Bulk add
+          </Link>
+          <Link href="/admin/social/new" className="bg-blue px-4 py-2.5 font-display text-sm font-bold text-paper">
+            + Add a post
+          </Link>
+        </div>
       </div>
 
       {posts.length === 0 ? (
