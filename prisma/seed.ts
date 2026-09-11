@@ -2,10 +2,12 @@ import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import fs from "fs";
 import path from "path";
+
 const prisma = new PrismaClient();
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL ?? "admin@letustv.com";
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD ?? "ChangeMe123!";
 const ADMIN_NAME = process.env.ADMIN_NAME ?? "Letus TV Admin";
+
 type SeedArticle = {
   title: string; slug: string; excerpt: string;
   category: string; author: string; image: string;
@@ -17,6 +19,7 @@ type SeedVideo = {
   category: string; url: string;
   featured: boolean; views: number; daysAgo: number;
 };
+
 const seedData = JSON.parse(
   fs.readFileSync(path.join(process.cwd(), "prisma", "seed-data.json"), "utf8")
 ) as {
@@ -26,10 +29,13 @@ const seedData = JSON.parse(
   videos: SeedVideo[];
   breaking: { headline: string; articleSlug: string; priority: number }[];
 };
+
 function buildBody(paragraphs: string[]): string {
   return paragraphs.map((p) => `<p>${p}</p>`).join("\n");
 }
+
 const DAY_MS = 24 * 60 * 60 * 1000;
+
 async function main() {
   const passwordHash = await bcrypt.hash(ADMIN_PASSWORD, 12);
   await prisma.user.upsert({
@@ -37,6 +43,7 @@ async function main() {
     update: { name: ADMIN_NAME, passwordHash, role: "ADMIN" },
     create: { email: ADMIN_EMAIL, name: ADMIN_NAME, passwordHash, role: "ADMIN" },
   });
+
   for (const c of seedData.categories) {
     await prisma.category.upsert({
       where: { slug: c.slug },
@@ -44,6 +51,7 @@ async function main() {
       create: { name: c.name, slug: c.slug, description: c.description, color: c.color },
     });
   }
+
   for (const a of seedData.authors) {
     await prisma.author.upsert({
       where: { slug: a.slug },
@@ -51,10 +59,12 @@ async function main() {
       create: { name: a.name, slug: a.slug, bio: a.bio, email: a.email },
     });
   }
+
   const categoriesDb = await prisma.category.findMany();
   const authorsDb = await prisma.author.findMany();
-  const categoryBySlug = new Map(categoriesDb.map((c) => [c.slug, c.id])));
-  const authorBySlug = new Map(authorsDb.map((a) => [a.slug, a.id])));
+  const categoryBySlug = new Map(categoriesDb.map((c) => [c.slug, c.id]));
+  const authorBySlug = new Map(authorsDb.map((a) => [a.slug, a.id]));
+
   for (const art of seedData.articles) {
     const categoryId = categoryBySlug.get(art.category);
     const authorId = authorBySlug.get(art.author);
@@ -80,12 +90,14 @@ async function main() {
       seoDescription: art.excerpt,
       seoKeywords: art.tags.join(", "),
     };
-    const existing = await prisma.article.findUnique({ where: { slug } } });
+
+    const existing = await prisma.article.findUnique({ where: { slug } });
     if (existing) {
-      await prisma.article.update({ where: { slug }, data } });
+      await prisma.article.update({ where: { slug }, data });
     } else {
-      await prisma.article.create({ data } });
+      await prisma.article.create({ data });
     }
+
     for (const tagName of art.tags) {
       const tagSlug = tagName.toLowerCase().replace(/\s+/g, "-");
       const tag = await prisma.tag.upsert({
@@ -93,7 +105,7 @@ async function main() {
         update: {},
         create: { name: tagName, slug: tagSlug },
       });
-      const article = await prisma.article.findUnique({ where: { slug } } });
+      const article = await prisma.article.findUnique({ where: { slug } });
       if (article) {
         await prisma.articleTags.upsert({
           where: { articleId_tagId: { articleId: article.id, tagId: tag.id } },
@@ -103,10 +115,11 @@ async function main() {
       }
     }
   }
+
   for (const v of seedData.videos) {
-    const categoryId = categoryBySlug.get(v.category;
+    const categoryId = categoryBySlug.get(v.category);
     if (!categoryId) {
-      console.warn("Skipping", v.slug;
+      console.warn("Skipping", v.slug);
       continue;
     }
     const publishedAt = new Date(Date.now() - (v.daysAgo ?? 0) * DAY_MS);
@@ -137,8 +150,9 @@ async function main() {
       },
     });
   }
+
   for (const b of seedData.breaking) {
-    const article = await prisma.article.findUnique({ where: { slug: b.articleSlug } } });
+    const article = await prisma.article.findUnique({ where: { slug: b.articleSlug } });
     if (article) {
       await prisma.breakingNews.createMany({
         data: [{
@@ -154,6 +168,7 @@ async function main() {
       });
     }
   }
+
   await prisma.liveStreamSettings.upsert({
     where: { id: "live-main" },
     update: {
@@ -174,6 +189,7 @@ async function main() {
       isVisible: true,
     },
   });
+
   await prisma.siteSettings.upsert({
     where: { id: "site-main" },
     update: {
@@ -202,8 +218,10 @@ async function main() {
       footerText: "Let's Watch. Let's Know. Let's Connect.",
     },
   });
+
   console.log("Seed complete");
 }
+
 main()
   .catch((e) => {
     console.error(e);

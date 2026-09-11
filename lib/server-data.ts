@@ -161,3 +161,77 @@ export async function getTotalArticleViews() {
   const agg = await prisma.articleView.aggregate({ _count: { _all: true } });
   return agg._count._all ?? 0;
 }
+
+export async function getArticlesPage(page: number = 1, perPage: number = 12, categorySlug?: string) {
+  const where = {
+    status: "PUBLISHED" as const,
+    ...(categorySlug ? { category: { slug: categorySlug } } : {}),
+  };
+  const [articles, total] = await Promise.all([
+    prisma.article.findMany({
+      where,
+      orderBy: { publishedAt: "desc" },
+      include: { category: true, author: true },
+      skip: (page - 1) * perPage,
+      take: perPage,
+    }),
+    prisma.article.count({ where }),
+  ]);
+  return { articles, total, pageCount: Math.max(1, Math.ceil(total / perPage)) };
+}
+
+export async function getVideosPage(page: number = 1, perPage: number = 12, categorySlug?: string) {
+  const where = {
+    status: "PUBLISHED" as const,
+    ...(categorySlug ? { category: { slug: categorySlug } } : {}),
+  };
+  const [videos, total] = await Promise.all([
+    prisma.video.findMany({
+      where,
+      orderBy: { publishedAt: "desc" },
+      include: { category: true },
+      skip: (page - 1) * perPage,
+      take: perPage,
+    }),
+    prisma.video.count({ where }),
+  ]);
+  return { videos, total, pageCount: Math.max(1, Math.ceil(total / perPage)) };
+}
+
+export async function getVideoBySlug(slug: string) {
+  return prisma.video.findUnique({
+    where: { slug },
+    include: { category: true },
+  });
+}
+
+export async function getRelatedVideos(videoId: string, categoryId: string, limit: number = 4) {
+  return prisma.video.findMany({
+    where: { status: "PUBLISHED", categoryId, id: { not: videoId } },
+    orderBy: { publishedAt: "desc" },
+    include: { category: true },
+    take: limit,
+  });
+}
+
+export async function getCategoryBySlug(slug: string) {
+  return prisma.category.findUnique({ where: { slug } });
+}
+
+export async function getSiteSettings() {
+  return prisma.siteSettings.findFirst({ orderBy: { updatedAt: "desc" } });
+}
+
+export async function incrementArticleViews(articleId: string) {
+  return prisma.article.update({
+    where: { id: articleId },
+    data: { views: { increment: 1 } },
+  }).catch(() => null);
+}
+
+export async function incrementVideoViews(videoId: string) {
+  return prisma.video.update({
+    where: { id: videoId },
+    data: { views: { increment: 1 } },
+  }).catch(() => null);
+}
