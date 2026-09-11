@@ -11,6 +11,8 @@ import {
 import { ArticleCard } from "@/components/article-card";
 import { VideoCard } from "@/components/video-card";
 import { SectionHeading } from "@/components/section-heading";
+import { TradingViewTickerTape } from "@/components/tradingview-ticker-tape";
+import { TradingViewAdvancedChart } from "@/components/tradingview-advanced-chart";
 import { timeAgo } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
@@ -72,6 +74,19 @@ export default async function HomePage() {
           </div>
         </section>
       )}
+
+      {/* Market ticker */}
+      <section className="-mx-5 sm:-mx-0">
+        <TradingViewTickerTape />
+      </section>
+
+      {/* Markets */}
+      <section className="space-y-6">
+        <SectionHeading title="Markets" accent="#e3a336" />
+        <div className="border border-line bg-blue-deep p-1">
+          <TradingViewAdvancedChart defaultSymbol="FX_IDC:USDNGN" />
+        </div>
+      </section>
 
       {/* Live now */}
       {live?.isVisible && (
