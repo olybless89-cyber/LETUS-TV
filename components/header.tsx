@@ -57,18 +57,15 @@ export function Header({
   return (
     <header className="sticky top-0 z-50 bg-blue-deep backdrop-blur border-b border-white/10">
       <div className="container-page flex flex-wrap items-center justify-between gap-x-4 gap-y-2 py-3">
-        <Link href="/" className="flex items-center gap-2 shrink-0" onClick={() => setMobileOpen(false)}>
+        <Link href="/" className="flex items-center shrink-0" onClick={() => setMobileOpen(false)}>
           <Image
             src="/images/logo.png"
             alt={siteName ?? "Letus TV"}
-            width={44}
-            height={44}
-            className="h-10 w-10 object-contain"
+            width={1065}
+            height={369}
+            className="h-12 w-auto sm:h-14"
             priority
           />
-          <span className="font-display font-bold text-xl text-paper leading-none">
-            Letus<span className="text-gold">TV</span>
-          </span>
         </Link>
 
         <nav className="hidden lg:flex items-center gap-5 font-display text-[0.88rem] text-paper/75">

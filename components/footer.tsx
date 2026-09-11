@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import type { SiteSettings } from "@prisma/client";
 import { NewsletterForm } from "@/components/newsletter-form";
 
@@ -16,9 +17,13 @@ export function Footer({ settings }: { settings: SiteSettings | null }) {
     <footer className="mt-20 bg-blue-deep text-paper">
       <div className="container-page grid gap-10 py-14 lg:grid-cols-[1.3fr_1fr_1fr_1.2fr]">
         <div>
-          <h2 className="font-display text-2xl font-bold">
-            Letus<span className="text-blue-bright">TV</span>
-          </h2>
+          <Image
+            src="/images/logo.png"
+            alt="Letus TV"
+            width={1065}
+            height={369}
+            className="h-14 w-auto"
+          />
           <p className="mt-3 max-w-xs text-sm text-paper/70">
             {settings?.description ??
               "A vibrant online television station bringing trusted news, current affairs, information and entertainment for audiences of all ages."}
