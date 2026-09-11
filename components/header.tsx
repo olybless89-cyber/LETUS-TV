@@ -55,7 +55,7 @@ export function Header({
   const items = breaking.length > 0 ? breaking : null;
 
   return (
-    <header className="sticky top-0 z-50 bg-blue-deep backdrop-blur border-b border-white/10">
+    <header className="sticky top-0 z-50 bg-paper/95 backdrop-blur border-b border-line">
       <div className="container-page flex flex-wrap items-center justify-between gap-x-4 gap-y-2 py-3">
         <Link href="/" className="flex items-center shrink-0" onClick={() => setMobileOpen(false)}>
           <Image
@@ -68,9 +68,9 @@ export function Header({
           />
         </Link>
 
-        <nav className="hidden lg:flex items-center gap-5 font-display text-[0.88rem] text-paper/75">
+        <nav className="hidden lg:flex items-center gap-5 font-display text-[0.88rem] text-ink-soft">
           {NAV_LINKS.map((link) => (
-            <Link key={link.href} href={link.href} className="hover:text-gold transition-colors">
+            <Link key={link.href} href={link.href} className="hover:text-blue transition-colors">
               {link.label}
             </Link>
           ))}
@@ -85,7 +85,7 @@ export function Header({
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={label}
-                className="flex h-8 w-8 items-center justify-center rounded-full bg-white/10 text-paper transition-transform hover:scale-110 hover:bg-gold hover:text-blue-deep"
+                className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-deep text-paper transition-transform hover:scale-110 hover:bg-blue"
               >
                 <Icon className="h-4 w-4" />
               </a>
@@ -105,7 +105,7 @@ export function Header({
             onClick={() => setMobileOpen((o) => !o)}
             aria-label={mobileOpen ? "Close menu" : "Open menu"}
             aria-expanded={mobileOpen}
-            className="flex h-9 w-9 items-center justify-center text-paper lg:hidden"
+            className="flex h-9 w-9 items-center justify-center text-ink lg:hidden"
           >
             <HamburgerIcon open={mobileOpen} />
           </button>
@@ -113,14 +113,14 @@ export function Header({
       </div>
 
       {mobileOpen && (
-        <nav className="border-t border-white/10 bg-blue-deep lg:hidden">
+        <nav className="border-t border-line bg-paper lg:hidden">
           <div className="container-page flex flex-col py-2">
             {NAV_LINKS.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
                 onClick={() => setMobileOpen(false)}
-                className="border-b border-white/5 py-3 font-display text-sm text-paper/85 last:border-0 hover:text-gold"
+                className="border-b border-line py-3 font-display text-sm text-ink-soft last:border-0 hover:text-blue"
               >
                 {link.label}
               </Link>
@@ -133,7 +133,7 @@ export function Header({
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={label}
-                  className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-paper hover:bg-gold hover:text-blue-deep"
+                  className="flex h-9 w-9 items-center justify-center rounded-full bg-blue-deep text-paper hover:bg-blue"
                 >
                   <Icon className="h-4 w-4" />
                 </a>
