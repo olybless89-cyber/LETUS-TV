@@ -183,6 +183,7 @@ export async function getBreakingArticles(limit: number = 6) {
   return prisma.article.findMany({
     where: { status: "PUBLISHED", isBreaking: true },
     orderBy: { publishedAt: "desc" },
+    include: { category: true, author: true },
     take: limit,
   });
 }

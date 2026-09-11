@@ -7,6 +7,13 @@ type TickerItem = { title: string; href: string };
 const NAV_LINKS = [
   { href: "/", label: "Home" },
   { href: "/live", label: "Live TV" },
+  { href: "/breaking", label: "Breaking" },
+  { href: "/category/politics", label: "Politics" },
+  { href: "/category/business", label: "Business" },
+  { href: "/category/entertainment", label: "Entertainment" },
+  { href: "/category/sports", label: "Sports" },
+  { href: "/category/tech", label: "Tech" },
+  { href: "/category/health", label: "Health" },
   { href: "/articles", label: "News" },
   { href: "/videos", label: "Videos" },
   { href: "/contact", label: "Contact" },
