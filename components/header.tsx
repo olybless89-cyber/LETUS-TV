@@ -68,9 +68,9 @@ export function Header({
           />
         </Link>
 
-        <nav className="hidden lg:flex items-center gap-5 font-display text-[0.88rem] text-ink-soft">
+        <nav className="hidden lg:flex items-center gap-5 font-display text-[0.88rem] font-bold text-blue-deep">
           {NAV_LINKS.map((link) => (
-            <Link key={link.href} href={link.href} className="hover:text-blue transition-colors">
+            <Link key={link.href} href={link.href} className="hover:text-live transition-colors">
               {link.label}
             </Link>
           ))}
@@ -120,7 +120,7 @@ export function Header({
                 key={link.href}
                 href={link.href}
                 onClick={() => setMobileOpen(false)}
-                className="border-b border-line py-3 font-display text-sm text-ink-soft last:border-0 hover:text-blue"
+                className="border-b border-line py-3 font-display text-sm font-bold text-blue-deep last:border-0 hover:text-live"
               >
                 {link.label}
               </Link>
