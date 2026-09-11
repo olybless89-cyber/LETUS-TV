@@ -12,9 +12,14 @@ export default async function AdminVideosPage() {
           <h1 className="font-display text-2xl font-bold text-paper">Videos</h1>
           <p className="mt-1 text-sm text-paper/50">Content from any platform — YouTube, Instagram, TikTok, Facebook, or a direct link.</p>
         </div>
-        <Link href="/admin/videos/new" className="bg-blue px-4 py-2.5 font-display text-sm font-bold text-paper">
-          + Add a video
-        </Link>
+        <div className="flex gap-3">
+          <Link href="/admin/videos/import" className="border border-white/10 px-4 py-2.5 font-display text-sm font-bold text-paper hover:bg-white/5">
+            Import from YouTube
+          </Link>
+          <Link href="/admin/videos/new" className="bg-blue px-4 py-2.5 font-display text-sm font-bold text-paper">
+            + Add a video
+          </Link>
+        </div>
       </div>
 
       {videos.length === 0 ? (
