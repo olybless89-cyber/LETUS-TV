@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { prisma } from "@/lib/db";
+import { getSiteSettings } from "@/lib/server-data";
+import { sendContactNotification, sendContactAutoReply } from "@/lib/email";
 
 const schema = z.object({
   name: z.string().min(1).max(200),
@@ -24,6 +26,20 @@ export async function POST(req: NextRequest) {
       message: parsed.data.message,
     },
   });
+
+  // Fire-and-forget: a slow or failed email should never block the form from succeeding.
+  (async () => {
+    const settings = await getSiteSettings().catch(() => null);
+    const notifyTo = settings?.contactEmail || "hello@letustv.com";
+    await sendContactNotification({
+      to: notifyTo,
+      name: parsed.data.name,
+      email: parsed.data.email,
+      subject: parsed.data.subject || null,
+      message: parsed.data.message,
+    });
+    await sendContactAutoReply({ to: parsed.data.email, name: parsed.data.name });
+  })().catch((err) => console.error("Contact email flow failed:", err));
 
   return NextResponse.json({ ok: true });
 }

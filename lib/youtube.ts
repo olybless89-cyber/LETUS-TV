@@ -25,24 +25,42 @@ function extractVideoId(link: string | undefined): string | null {
   return match ? match[1] : null;
 }
 
+async function fetchFeed(url: string): Promise<YouTubeVideoItem[]> {
+  const feed = await parser.parseURL(url);
+  return (feed.items || [])
+    .map((item) => {
+      const id = extractVideoId(item.link);
+      if (!id) return null;
+      return {
+        id,
+        title: item.title?.trim() || "Untitled",
+        description: (item.contentSnippet || item.content || "").slice(0, 300),
+        thumbnailUrl: `https://i.ytimg.com/vi/${id}/hqdefault.jpg`,
+        publishedAt: item.isoDate ? new Date(item.isoDate) : new Date(),
+      };
+    })
+    .filter((v): v is YouTubeVideoItem => v !== null);
+}
+
 async function fetchChannelVideos(): Promise<YouTubeVideoItem[]> {
+  // The uploads-playlist feed (UU + channel ID minus its UC prefix) is the
+  // definitive list of everything a channel has published. The plain
+  // channel_id feed sometimes under-reports videos for smaller/newer
+  // channels, so try that first and fall back if it comes back empty.
+  const uploadsPlaylistId = "UU" + LETUS_TV_CHANNEL_ID.slice(2);
   try {
-    const feed = await parser.parseURL(
+    const items = await fetchFeed(
+      `https://www.youtube.com/feeds/videos.xml?playlist_id=${uploadsPlaylistId}`
+    );
+    if (items.length > 0) return items;
+  } catch {
+    // fall through to the backup feed below
+  }
+
+  try {
+    return await fetchFeed(
       `https://www.youtube.com/feeds/videos.xml?channel_id=${LETUS_TV_CHANNEL_ID}`
     );
-    return (feed.items || [])
-      .map((item) => {
-        const id = extractVideoId(item.link);
-        if (!id) return null;
-        return {
-          id,
-          title: item.title?.trim() || "Untitled",
-          description: (item.contentSnippet || item.content || "").slice(0, 300),
-          thumbnailUrl: `https://i.ytimg.com/vi/${id}/hqdefault.jpg`,
-          publishedAt: item.isoDate ? new Date(item.isoDate) : new Date(),
-        };
-      })
-      .filter((v): v is YouTubeVideoItem => v !== null);
   } catch {
     return [];
   }
