@@ -24,7 +24,7 @@ export function YouTubeImportPanel() {
   const [loading, setLoading] = useState(true);
   const [importing, setImporting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [result, setResult] = useState<{ created: number; skipped: number } | null>(null);
+  const [result, setResult] = useState<{ created: number; updated: number; skipped: number } | null>(null);
 
   useEffect(() => {
     fetch("/api/admin/videos/import")
@@ -35,6 +35,8 @@ export function YouTubeImportPanel() {
         const initialSelected: Record<string, boolean> = {};
         const initialCategory: Record<string, string> = {};
         for (const item of data.items ?? []) {
+          // New videos are pre-selected for import; already-imported ones are
+          // left unchecked but can still be checked to re-import/refresh.
           initialSelected[item.youtubeId] = !item.alreadyImported;
           initialCategory[item.youtubeId] = item.suggestedCategoryId ?? data.categories?.[0]?.id ?? "";
         }
@@ -50,17 +52,18 @@ export function YouTubeImportPanel() {
 
   async function handleImport() {
     const selections = items
-      .filter((item) => selected[item.youtubeId] && !item.alreadyImported)
+      .filter((item) => selected[item.youtubeId])
       .map((item) => ({
         youtubeId: item.youtubeId,
         title: item.title,
         thumbnailUrl: item.thumbnailUrl,
         publishedAt: item.publishedAt,
         categoryId: categoryChoice[item.youtubeId],
+        reimport: item.alreadyImported,
       }));
 
     if (selections.length === 0) {
-      setError("Select at least one video to import.");
+      setError("Select at least one video.");
       return;
     }
 
@@ -95,17 +98,27 @@ export function YouTubeImportPanel() {
     return <p className="text-sm text-live">{error}</p>;
   }
 
-  const selectedCount = items.filter((i) => selected[i.youtubeId] && !i.alreadyImported).length;
-
+  const selectedCount = items.filter((i) => selected[i.youtubeId]).length;
   const newCount = items.filter((i) => !i.alreadyImported).length;
-  const allCaughtUp = items.length > 0 && newCount === 0;
+  const newSelectedCount = items.filter((i) => selected[i.youtubeId] && !i.alreadyImported).length;
+  const reimportSelectedCount = items.filter((i) => selected[i.youtubeId] && i.alreadyImported).length;
+
+  function buttonLabel() {
+    if (importing) return "Importing...";
+    const parts: string[] = [];
+    if (newSelectedCount > 0) parts.push(`${newSelectedCount} New`);
+    if (reimportSelectedCount > 0) parts.push(`${reimportSelectedCount} Re-import`);
+    if (parts.length === 0) return "Select videos below";
+    return `Import ${parts.join(" + ")} (Auto-Categorized)`;
+  }
 
   return (
     <div className="space-y-4">
       {result && (
         <p className="text-sm text-emerald-400">
-          Imported {result.created} video{result.created === 1 ? "" : "s"}
-          {result.skipped > 0 ? `, skipped ${result.skipped} already-imported` : ""}.
+          {result.created > 0 && `Imported ${result.created} new video${result.created === 1 ? "" : "s"}. `}
+          {result.updated > 0 && `Refreshed ${result.updated} existing video${result.updated === 1 ? "" : "s"}. `}
+          {result.skipped > 0 && `Skipped ${result.skipped}.`}
         </p>
       )}
       {error && <p className="text-sm text-live">{error}</p>}
@@ -116,14 +129,10 @@ export function YouTubeImportPanel() {
           {newCount > 0 && ` — ${newCount} new`}
         </p>
         <p className="mt-1 text-xs text-paper/50">
-          Every new video below is already pre-selected with its category auto-detected from the title. One click imports all of them, sorted straight into the right section — Sports to Sports, Tech to Tech, and so on.
+          New videos are pre-selected with categories auto-detected from the title. Already-imported videos are unchecked by default, but you can check any of them to re-import — this refreshes its thumbnail, link, and category from YouTube.
         </p>
 
-        {allCaughtUp ? (
-          <p className="mt-4 text-sm text-gold">
-            You&apos;re all caught up — every video on your channel is already imported. Upload something new on YouTube, then come back and click this again.
-          </p>
-        ) : items.length === 0 ? (
+        {items.length === 0 ? (
           <p className="mt-4 text-sm text-paper/50">No videos found on your channel yet.</p>
         ) : (
           <button
@@ -131,39 +140,37 @@ export function YouTubeImportPanel() {
             disabled={importing || selectedCount === 0}
             className="mt-4 bg-blue px-6 py-3 font-display text-sm font-bold text-paper disabled:opacity-50"
           >
-            {importing ? "Importing..." : `Import All ${selectedCount} New Video${selectedCount === 1 ? "" : "s"} (Auto-Categorized)`}
+            {buttonLabel()}
           </button>
         )}
       </div>
 
       {items.length > 0 && (
-        <details className="border border-white/10">
+        <details className="border border-white/10" open>
           <summary className="cursor-pointer px-4 py-3 font-display text-xs font-semibold text-paper/60 hover:text-paper">
-            Adjust categories or uncheck individual videos (optional)
+            All videos — check any to import or re-import
           </summary>
           <div className="border-t border-white/10">
             {items.map((item) => (
               <div
                 key={item.youtubeId}
-                className={`flex items-center gap-4 border-b border-white/5 p-3 last:border-0 ${
-                  item.alreadyImported ? "opacity-40" : ""
-                }`}
+                className="flex items-center gap-4 border-b border-white/5 p-3 last:border-0"
               >
                 <input
                   type="checkbox"
-                  checked={!!selected[item.youtubeId] && !item.alreadyImported}
-                  disabled={item.alreadyImported}
+                  checked={!!selected[item.youtubeId]}
                   onChange={(e) => setSelected((s) => ({ ...s, [item.youtubeId]: e.target.checked }))}
                   className="h-4 w-4"
                 />
                 <img src={item.thumbnailUrl} alt={item.title} className="h-12 w-20 shrink-0 object-cover" />
                 <span className="min-w-0 flex-1 truncate text-sm text-paper">
                   {item.title}
-                  {item.alreadyImported && <span className="ml-2 text-xs text-paper/40">(already imported)</span>}
+                  {item.alreadyImported && (
+                    <span className="ml-2 text-xs text-gold">(imported — check to re-import)</span>
+                  )}
                 </span>
                 <select
                   value={categoryChoice[item.youtubeId] ?? ""}
-                  disabled={item.alreadyImported}
                   onChange={(e) => setCategoryChoice((c) => ({ ...c, [item.youtubeId]: e.target.value }))}
                   className="shrink-0 border border-white/10 bg-white/5 px-2 py-1 text-xs text-paper"
                 >

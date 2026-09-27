@@ -60,6 +60,7 @@ const importSchema = z.object({
         thumbnailUrl: z.string().url(),
         publishedAt: z.string(),
         categoryId: z.string().min(1),
+        reimport: z.boolean().optional(),
       })
     )
     .min(1),
@@ -76,13 +77,27 @@ export async function POST(req: NextRequest) {
   }
 
   let created = 0;
+  let updated = 0;
   let skipped = 0;
 
   for (const item of parsed.data.selections) {
     const slug = slugify(item.title);
     const exists = await prisma.video.findUnique({ where: { slug } });
+
     if (exists) {
-      skipped++;
+      if (item.reimport) {
+        await prisma.video.update({
+          where: { slug },
+          data: {
+            thumbnailUrl: item.thumbnailUrl,
+            videoUrl: `https://www.youtube.com/watch?v=${item.youtubeId}`,
+            categoryId: item.categoryId,
+          },
+        });
+        updated++;
+      } else {
+        skipped++;
+      }
       continue;
     }
 
@@ -101,5 +116,5 @@ export async function POST(req: NextRequest) {
     created++;
   }
 
-  return NextResponse.json({ created, skipped });
+  return NextResponse.json({ created, updated, skipped });
 }
