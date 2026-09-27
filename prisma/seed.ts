@@ -5,6 +5,7 @@ import path from "path";
 
 const prisma = new PrismaClient();
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL ?? "admin@letustv.com";
+const CONTACT_EMAIL = process.env.CONTACT_EMAIL ?? "hello@letustv.com";
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD ?? "ChangeMe123!";
 const ADMIN_NAME = process.env.ADMIN_NAME ?? "Letus TV Admin";
 
@@ -197,7 +198,7 @@ async function main() {
       siteName: "Letus TV",
       tagline: "Let's Watch. Let's Know. Let's Connect.",
       description: "A vibrant online television station bringing trusted news, current affairs, information and entertainment for audiences of all ages.",
-      contactEmail: ADMIN_EMAIL,
+      contactEmail: CONTACT_EMAIL,
       facebookUrl: "https://facebook.com/letustv",
       instagramUrl: "https://instagram.com/letustv",
       youtubeUrl: "https://youtube.com/@letustv",
@@ -210,7 +211,7 @@ async function main() {
       siteName: "Letus TV",
       tagline: "Let's Watch. Let's Know. Let's Connect.",
       description: "A vibrant online television station bringing trusted news, current affairs, information and entertainment for audiences of all ages.",
-      contactEmail: ADMIN_EMAIL,
+      contactEmail: CONTACT_EMAIL,
       facebookUrl: "https://facebook.com/letustv",
       instagramUrl: "https://instagram.com/letustv",
       youtubeUrl: "https://youtube.com/@letustv",

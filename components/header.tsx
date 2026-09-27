@@ -77,7 +77,7 @@ export function Header({
         </nav>
 
         <div className="flex items-center gap-2 shrink-0">
-          <div className="hidden sm:flex items-center gap-1.5">
+          <div className="flex items-center gap-1.5">
             {SOCIALS.map(({ label, url, Icon }) => (
               <a
                 key={label}
@@ -85,9 +85,9 @@ export function Header({
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={label}
-                className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-deep text-paper transition-transform hover:scale-110 hover:bg-blue"
+                className="flex h-7 w-7 sm:h-8 sm:w-8 items-center justify-center rounded-full bg-blue-deep text-paper transition-transform hover:scale-110 hover:bg-blue"
               >
-                <Icon className="h-4 w-4" />
+                <Icon className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
               </a>
             ))}
           </div>

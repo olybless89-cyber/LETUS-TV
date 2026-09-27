@@ -2,12 +2,13 @@ import Link from "next/link";
 import Image from "next/image";
 import type { SiteSettings } from "@prisma/client";
 import { NewsletterForm } from "@/components/newsletter-form";
+import { YouTubeIcon, InstagramIcon, TikTokIcon, FacebookIcon } from "@/components/social-icons";
 
 const SOCIAL_LINKS = [
-  { label: "YouTube", url: "https://youtube.com/@letus-tv" },
-  { label: "Instagram", url: "https://www.instagram.com/letus_tv" },
-  { label: "TikTok", url: "https://www.tiktok.com/@letustv" },
-  { label: "Facebook", url: "https://www.facebook.com/share/14neP8cQQQV/" },
+  { label: "YouTube", url: "https://youtube.com/@letus-tv", Icon: YouTubeIcon },
+  { label: "Instagram", url: "https://www.instagram.com/letus_tv", Icon: InstagramIcon },
+  { label: "TikTok", url: "https://www.tiktok.com/@letustv", Icon: TikTokIcon },
+  { label: "Facebook", url: "https://www.facebook.com/share/14neP8cQQQV/", Icon: FacebookIcon },
 ];
 
 export function Footer({ settings }: { settings: SiteSettings | null }) {
@@ -62,16 +63,17 @@ export function Footer({ settings }: { settings: SiteSettings | null }) {
       <div className="border-t border-white/10">
         <div className="container-page flex flex-col gap-2 py-5 text-xs text-paper/60 sm:flex-row sm:items-center sm:justify-between">
           <p>&copy; {year} Letus TV. All rights reserved.</p>
-          <div className="flex gap-4">
-            {SOCIAL_LINKS.map((s) => (
+          <div className="flex gap-2">
+            {SOCIAL_LINKS.map(({ label, url, Icon }) => (
               <a
-                key={s.label}
-                href={s.url}
+                key={label}
+                href={url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-gold"
+                aria-label={label}
+                className="flex h-8 w-8 items-center justify-center rounded-full bg-white/10 text-paper transition-transform hover:scale-110 hover:bg-gold hover:text-blue-deep"
               >
-                {s.label}
+                <Icon className="h-4 w-4" />
               </a>
             ))}
           </div>

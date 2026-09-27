@@ -317,6 +317,14 @@ export async function getSiteSettings() {
   return prisma.siteSettings.findFirst({ orderBy: { updatedAt: "desc" } });
 }
 
+export async function getAllContactMessagesForAdmin() {
+  return prisma.contactMessage.findMany({ orderBy: { createdAt: "desc" } });
+}
+
+export async function getAllSubscribersForAdmin() {
+  return prisma.subscriber.findMany({ orderBy: { createdAt: "desc" } });
+}
+
 export async function incrementArticleViews(articleId: string) {
   return prisma.article.update({
     where: { id: articleId },
