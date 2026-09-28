@@ -62,7 +62,19 @@ export function Footer({ settings }: { settings: SiteSettings | null }) {
 
       <div className="border-t border-white/10">
         <div className="container-page flex flex-col gap-2 py-5 text-xs text-paper/60 sm:flex-row sm:items-center sm:justify-between">
-          <p>&copy; {year} Letus TV. All rights reserved.</p>
+          <p>
+            &copy; {year} Letus TV. All rights reserved.
+            <span className="mx-2 text-paper/30">|</span>
+            Powered by{" "}
+            <a
+              href="https://digitalweboracleict.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-bold text-gold hover:underline"
+            >
+              DWO
+            </a>
+          </p>
           <div className="flex gap-2">
             {SOCIAL_LINKS.map(({ label, url, Icon }) => (
               <a
