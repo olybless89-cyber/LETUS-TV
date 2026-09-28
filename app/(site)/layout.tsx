@@ -17,6 +17,7 @@ const body = Source_Serif_4({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://letustv.com"),
   title: "Letus TV — Let's Watch. Let's Know. Let's Connect.",
   description:
     "Letus TV is a vibrant online television station bringing trusted news, current affairs, information and entertainment for audiences of all ages.",
