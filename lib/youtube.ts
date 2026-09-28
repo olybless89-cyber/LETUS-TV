@@ -42,7 +42,56 @@ async function fetchFeed(url: string): Promise<YouTubeVideoItem[]> {
     .filter((v): v is YouTubeVideoItem => v !== null);
 }
 
+async function fetchViaDataApi(apiKey: string): Promise<YouTubeVideoItem[]> {
+  const uploadsPlaylistId = "UU" + LETUS_TV_CHANNEL_ID.slice(2);
+  const url = `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${uploadsPlaylistId}&maxResults=50&key=${apiKey}`;
+
+  const res = await fetch(url, { next: { revalidate: 0 } });
+  if (!res.ok) {
+    throw new Error(`YouTube Data API returned ${res.status}`);
+  }
+  const data = await res.json();
+
+  type ApiItem = {
+    snippet: {
+      title: string;
+      description?: string;
+      publishedAt: string;
+      resourceId: { videoId: string };
+      thumbnails: { high?: { url: string }; medium?: { url: string }; default?: { url: string } };
+    };
+  };
+
+  return ((data.items || []) as ApiItem[]).map((item) => {
+    const id = item.snippet.resourceId.videoId;
+    const thumb =
+      item.snippet.thumbnails.high?.url ||
+      item.snippet.thumbnails.medium?.url ||
+      item.snippet.thumbnails.default?.url ||
+      `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
+    return {
+      id,
+      title: item.snippet.title?.trim() || "Untitled",
+      description: (item.snippet.description || "").slice(0, 300),
+      thumbnailUrl: thumb,
+      publishedAt: new Date(item.snippet.publishedAt),
+    };
+  });
+}
+
 async function fetchChannelVideos(): Promise<YouTubeVideoItem[]> {
+  // The official Data API doesn't have the flaky-from-datacenter-IPs problem
+  // that YouTube's RSS feeds sometimes have, so prefer it when a key is set.
+  const apiKey = process.env.YOUTUBE_API_KEY;
+  if (apiKey) {
+    try {
+      const items = await fetchViaDataApi(apiKey);
+      if (items.length > 0) return items;
+    } catch (err) {
+      console.error("YouTube Data API fetch failed, falling back to RSS:", err);
+    }
+  }
+
   // The uploads-playlist feed (UU + channel ID minus its UC prefix) is the
   // definitive list of everything a channel has published. The plain
   // channel_id feed sometimes under-reports videos for smaller/newer
