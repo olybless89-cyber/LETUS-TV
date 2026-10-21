@@ -1,0 +1,28 @@
+app = "letus-tv"
+primary_region = "lhr"
+
+[build]
+  [build.args]
+    NEXT_PUBLIC_SITE_URL = "https://letus-tv.fly.dev"
+
+[env]
+  NODE_ENV = "production"
+  PORT = "3000"
+  NEXT_PUBLIC_SITE_URL = "https://letus-tv.fly.dev"
+
+# Project has no prisma/migrations folder (schema is synced with db push),
+# so `migrate deploy` would never create tables. Sync the schema instead.
+[deploy]
+  release_command = "npx prisma db push --skip-generate"
+
+[http_service]
+  internal_port = 3000
+  force_https = true
+  auto_stop_machines = "stop"
+  auto_start_machines = true
+  min_machines_running = 0
+
+[[vm]]
+  memory = "1gb"
+  cpu_kind = "shared"
+  cpus = 1

@@ -1,0 +1,51 @@
+name: Deploy to Fly
+
+on:
+  push:
+    branches: [master, main]
+  workflow_dispatch:
+
+concurrency: fly-deploy
+
+env:
+  FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+  APP: letus-tv
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: superfly/flyctl-actions/setup-flyctl@master
+
+      - name: Sync secrets to Fly
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL }}
+          ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
+          ADMIN_NAME: ${{ secrets.ADMIN_NAME }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
+          CONTACT_EMAIL: ${{ secrets.CONTACT_EMAIL }}
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+        run: |
+          for v in DATABASE_URL JWT_SECRET; do
+            [ -n "${!v}" ] || { echo "::error::$v secret is missing"; exit 1; }
+          done
+          ARGS=()
+          for v in DATABASE_URL JWT_SECRET ADMIN_EMAIL ADMIN_PASSWORD \
+                   ADMIN_NAME RESEND_API_KEY EMAIL_FROM CONTACT_EMAIL \
+                   YOUTUBE_API_KEY; do
+            [ -n "${!v}" ] && ARGS+=("$v=${!v}")
+          done
+          flyctl secrets set --stage -a "$APP" "${ARGS[@]}"
+
+      - name: Ensure public IPs
+        run: |
+          IPS=$(flyctl ips list -a "$APP")
+          echo "$IPS" | grep -qw v6 || flyctl ips allocate-v6 -a "$APP"
+          echo "$IPS" | grep -qw v4 || flyctl ips allocate-v4 --shared -a "$APP"
+
+      - name: Deploy
+        run: flyctl deploy --remote-only -a "$APP"
