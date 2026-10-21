@@ -21,6 +21,7 @@ jobs:
       - name: Sync secrets to Fly
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DATABASE_URL_UNPOOLED: ${{ secrets.DATABASE_URL_UNPOOLED }}
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
           ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL }}
           ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
@@ -34,7 +35,7 @@ jobs:
           # a GitHub secret overrides it.
           [ -n "$JWT_SECRET" ] || { echo "::error::JWT_SECRET missing"; exit 1; }
           ARGS=()
-          for v in DATABASE_URL JWT_SECRET ADMIN_EMAIL ADMIN_PASSWORD \
+          for v in DATABASE_URL DATABASE_URL_UNPOOLED JWT_SECRET ADMIN_EMAIL ADMIN_PASSWORD \
                    ADMIN_NAME RESEND_API_KEY EMAIL_FROM CONTACT_EMAIL \
                    YOUTUBE_API_KEY; do
             [ -n "${!v}" ] && ARGS+=("$v=${!v}")
