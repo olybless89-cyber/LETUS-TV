@@ -30,9 +30,9 @@ jobs:
           CONTACT_EMAIL: ${{ secrets.CONTACT_EMAIL }}
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
         run: |
-          for v in DATABASE_URL JWT_SECRET; do
-            [ -n "${!v}" ] || { echo "::error::$v secret is missing"; exit 1; }
-          done
+          # DATABASE_URL comes from `fly mpg attach`; only set here if
+          # a GitHub secret overrides it.
+          [ -n "$JWT_SECRET" ] || { echo "::error::JWT_SECRET missing"; exit 1; }
           ARGS=()
           for v in DATABASE_URL JWT_SECRET ADMIN_EMAIL ADMIN_PASSWORD \
                    ADMIN_NAME RESEND_API_KEY EMAIL_FROM CONTACT_EMAIL \
